@@ -224,7 +224,8 @@ class Qrzlotw_model extends CI_Model {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
-		curl_setopt($ch, CURLOPT_ENCODING, '');
+		// NOTE: do NOT set CURLOPT_ENCODING here. Some PHP/curl builds fail with
+		// CURLE_WRITE_ERROR (23) as soon as it is set, even with RETURNTRANSFER.
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 
