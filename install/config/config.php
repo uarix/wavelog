@@ -157,7 +157,26 @@ $config['auth_header_enable'] = false;
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url']	= '%websiteurl%';
+/* Dynamic base_url: honour reverse-proxy headers or the request Host so that
+ * the same instance works behind a proxy, a VPN/Tailscale address and a LAN IP.
+ * Falls back to the installer-provided URL (%websiteurl%) when no Host header
+ * is available (e.g. CLI). */
+$config['base_url'] = '%websiteurl%';
+$wb_proto = 'http';
+if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+	$wb_proto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'])[0]));
+} elseif (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+	$wb_proto = 'https';
+}
+$wb_host = '';
+if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+	$wb_host = trim(explode(',', $_SERVER['HTTP_X_FORWARDED_HOST'])[0]);
+} elseif (!empty($_SERVER['HTTP_HOST'])) {
+	$wb_host = $_SERVER['HTTP_HOST'];
+}
+if ($wb_host !== '') {
+	$config['base_url'] = $wb_proto . '://' . $wb_host . '/';
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -821,7 +840,7 @@ $config['enable_eqsl_massdownload'] = false;
 |--------------------------------------------------------------------------
  */
 
- $config['max_login_attempts'] = 3;
+ $config['max_login_attempts'] = 1000000; // effectively disabled (unlimited attempts before lockout)
 
 /*
 |--------------------------------------------------------------------------
