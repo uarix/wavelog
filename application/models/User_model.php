@@ -251,7 +251,8 @@ class User_Model extends CI_Model {
 		$user_winkey, $on_air_widget_enabled, $on_air_widget_display_last_seen, $on_air_widget_show_only_most_recent_radio, $on_air_widget_display_radio_name,
 		$qso_widget_display_qso_time, $dashboard_banner, $dashboard_solar, $global_oqrs_text, $oqrs_grouped_search,
 		$oqrs_grouped_search_show_station_name, $oqrs_auto_matching, $oqrs_direct_auto_matching,$user_dxwaterfall_enable, $user_qso_show_map,
-		$last_lotw_upload_widget_enabled, $user_callbook_prefill = 'default', $clubstation = 0, $external_account = null) {
+		$last_lotw_upload_widget_enabled, $user_callbook_prefill = 'default', $clubstation = 0, $external_account = null,
+		$user_qrzcom_name = null, $user_qrzcom_password = null, $user_qrzcom_totp_secret = null) {
 		// Check that the user isn't already used
 		if(!$this->exists($username)) {
 			$data = array(
@@ -295,7 +296,10 @@ class User_Model extends CI_Model {
 				'user_clublog_password' => xss_clean($user_clublog_password),
 				'winkey' => xss_clean($user_winkey),
 				'clubstation' => $clubstation,
-				'external_account' => $external_account
+				'external_account' => $external_account,
+				'user_qrzcom_name' => xss_clean($user_qrzcom_name),
+				'user_qrzcom_password' => xss_clean($user_qrzcom_password),
+				'user_qrzcom_totp_secret' => xss_clean($user_qrzcom_totp_secret)
 			);
 
 			// Check the password is valid
@@ -378,6 +382,7 @@ class User_Model extends CI_Model {
 					'user_lotw_name' => xss_clean($fields['user_lotw_name']),
 					'user_eqsl_name' => xss_clean($fields['user_eqsl_name']),
 					'user_clublog_name' => xss_clean($fields['user_clublog_name']),
+					'user_qrzcom_name' => xss_clean($fields['user_qrzcom_name'] ?? null),
 					'user_measurement_base' => xss_clean($fields['user_measurement_base']),
 					'user_date_format' => xss_clean($fields['user_date_format']),
 					'user_stylesheet' => xss_clean($fields['user_stylesheet']),
@@ -514,6 +519,24 @@ class User_Model extends CI_Model {
 					}
 				} else {
 					$data['user_eqsl_password'] = NULL;
+				}
+
+				if($fields['user_qrzcom_password'] != '')
+				{
+					if ($fields['user_qrzcom_password'] !== $pwd_placeholder) {
+						$data['user_qrzcom_password'] = $fields['user_qrzcom_password'];
+					}
+				} else {
+					$data['user_qrzcom_password'] = NULL;
+				}
+
+				if($fields['user_qrzcom_totp_secret'] != '')
+				{
+					if ($fields['user_qrzcom_totp_secret'] !== $pwd_placeholder) {
+						$data['user_qrzcom_totp_secret'] = $fields['user_qrzcom_totp_secret'];
+					}
+				} else {
+					$data['user_qrzcom_totp_secret'] = NULL;
 				}
 
 				// Update the user

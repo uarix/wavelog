@@ -112,4 +112,39 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="card mt-3">
+		<div class="card-header"><?= __("Import from LoTW"); ?></div>
+		<div class="card-body">
+			<?php if (!empty($qrzlotw_lotw_set) && !empty($qrzlotw_qrz_set)) { ?>
+				<p><?= __("Pulls new LoTW confirmations into your QRZ Logbook (QRZ Logbook → Import from LoTW)."); ?></p>
+				<?php if (!empty($qrzlotw_next_run)) { ?><p><?= __("Next automatic run (UTC): "); ?><?= $qrzlotw_next_run; ?></p><?php } ?>
+				<button type="button" id="qrzlotw-sync-btn" class="btn btn-primary ld-ext-right"><?= __("Sync now"); ?><div class="ld ld-ring ld-spin"></div></button>
+				<span id="qrzlotw-sync-running" class="sync-indicator"><?= __("running..."); ?></span>
+				<div id="qrzlotw_manual_results" class="mt-3"></div>
+			<?php } else { ?>
+				<?php if (empty($qrzlotw_lotw_set)) { ?>
+					<div class="alert alert-warning"><?= __("LoTW password is not configured. Add it under Third Party Services first."); ?></div>
+				<?php } ?>
+				<?php if (empty($qrzlotw_qrz_set)) { ?>
+					<div class="alert alert-warning"><?= __("QRZ.com credentials are not configured. Add them under Third Party Services first."); ?></div>
+				<?php } ?>
+			<?php } ?>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var btn = document.getElementById('qrzlotw-sync-btn');
+			if (!btn) { return; }
+			btn.addEventListener('click', function () {
+				var results = document.getElementById('qrzlotw_manual_results');
+				var ind = document.getElementById('qrzlotw-sync-running');
+				results.innerHTML = '';
+				ind.classList.add('active');
+				wlLoadInto('<?php echo site_url('qrzlotw/sync'); ?>', results)
+					.finally(function () { ind.classList.remove('active'); });
+			});
+		});
+	</script>
 </div>

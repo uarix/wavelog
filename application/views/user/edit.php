@@ -1180,6 +1180,34 @@
 								</div>
 							</div>
 						</div>
+
+						<!-- QRZ.com -->
+						<div class="col-md">
+							<div class="card">
+								<div class="card-header"><?= __("QRZ.com"); ?></div>
+								<div class="card-body">
+									<div class="mb-3">
+										<label><?= __("QRZ.com Username"); ?></label>
+										<input class="form-control" type="text" name="user_qrzcom_name" value="<?php if(isset($user_qrzcom_name)) { echo $user_qrzcom_name; } ?>" />
+									</div>
+
+									<div class="mb-3">
+										<label><?= __("QRZ.com Password"); ?></label>
+										<div class="input-group">
+											<input class="form-control" type="password" name="user_qrzcom_password" value="<?php if(isset($user_qrzcom_password)) { echo $user_qrzcom_password; } ?>" />
+											<span class="input-group-btn"><button class="btn btn-default btn-pwd-showhide" type="button"><i class="fa fa-eye-slash"></i></button></span>
+										</div>
+										<small class="form-text text-muted"><?= __("Used for the \"Import from LoTW\" feature of the QRZ Logbook. Requires the LoTW password above."); ?></small>
+									</div>
+
+									<div class="mb-3">
+										<label><?= __("QRZ.com TOTP Secret (2FA)"); ?></label>
+										<input class="form-control" type="password" name="user_qrzcom_totp_secret" value="<?php if(isset($user_qrzcom_totp_secret)) { echo $user_qrzcom_totp_secret; } ?>" />
+										<small class="form-text text-muted"><?= __("Only needed if your QRZ.com account uses two-factor authentication. Base32 secret from your authenticator app."); ?></small>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

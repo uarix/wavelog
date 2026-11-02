@@ -304,6 +304,19 @@ class Qrz extends CI_Controller {
 		$data['next_run_up'] = $this->cron_model->get_next_run("qrz_upload");
 		$data['next_run_down'] = $this->cron_model->get_next_run("qrz_download");
 
+		// "Import from LoTW" (qrzlotw) - manual trigger and dependency status
+		$this->load->model('user_model');
+		$me = $this->user_model->get_by_id($this->session->userdata('user_id'))->row();
+		$data['qrzlotw_lotw_set'] = !empty($me->user_lotw_password);
+		$data['qrzlotw_qrz_set'] = !empty($me->user_qrzcom_name) && !empty($me->user_qrzcom_password);
+		$data['qrzlotw_next_run'] = null;
+		foreach ($this->cron_model->get_crons() as $cron) {
+			if ($cron->id === 'qrzlotw_sync') {
+				$data['qrzlotw_next_run'] = $cron->next_run;
+				break;
+			}
+		}
+
 		$this->load->view('interface_assets/header', $data);
 		$this->load->view('qrz/export');
 		$this->load->view('interface_assets/footer');

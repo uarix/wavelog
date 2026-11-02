@@ -338,7 +338,11 @@ class User extends CI_Controller {
 				$this->input->post('user_qso_show_map') ?? 1,
 				$this->input->post('last_lotw_upload_widget_enabled'),
 				$this->input->post('user_callbook_prefill', true) ?? 'default',
-				$this->input->post('clubstation') == '1' ? true : false)
+				$this->input->post('clubstation') == '1' ? true : false,
+				null,
+				$this->input->post('user_qrzcom_name'),
+				$this->input->post('user_qrzcom_password'),
+				$this->input->post('user_qrzcom_totp_secret'))
 			) {
 				// Check for errors
 				case EUSERNAMEEXISTS:
@@ -633,6 +637,32 @@ class User extends CI_Controller {
 					$data['user_eqsl_password'] = $this->pwd_placeholder;
 				} else {
 					$data['user_eqsl_password'] = '';
+				}
+			}
+
+			if($this->input->post('user_qrzcom_name')) {
+				$data['user_qrzcom_name'] = $this->input->post('user_qrzcom_name', true);
+			} else {
+				$data['user_qrzcom_name'] = $q->user_qrzcom_name;
+			}
+
+			if($this->input->post('user_qrzcom_password')) {
+				$data['user_qrzcom_password'] = $this->input->post('user_qrzcom_password', true);
+			} else {
+				if ($q->user_qrzcom_password !== '' && $q->user_qrzcom_password !== null) {
+					$data['user_qrzcom_password'] = $this->pwd_placeholder;
+				} else {
+					$data['user_qrzcom_password'] = '';
+				}
+			}
+
+			if($this->input->post('user_qrzcom_totp_secret')) {
+				$data['user_qrzcom_totp_secret'] = $this->input->post('user_qrzcom_totp_secret', true);
+			} else {
+				if ($q->user_qrzcom_totp_secret !== '' && $q->user_qrzcom_totp_secret !== null) {
+					$data['user_qrzcom_totp_secret'] = $this->pwd_placeholder;
+				} else {
+					$data['user_qrzcom_totp_secret'] = '';
 				}
 			}
 
